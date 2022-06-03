@@ -1,9 +1,10 @@
 package com.springmicro.customer;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
-public record CustomerService(CustomerRepository customerRepository) {
+public record CustomerService(CustomerRepository customerRepository, ApiClient apiClient) {
     public void register(CustomerRegistrationRequest customerRegistrationRequestRequest) {
         Customer customer=Customer.builder()
                 .name(customerRegistrationRequestRequest.name())
@@ -13,6 +14,15 @@ public record CustomerService(CustomerRepository customerRepository) {
         // todo: check if mail is valid;
         // todo: check if mail isn't taken
         // todo: store in db
-        customerRepository.save(customer);
+        customerRepository.saveAndFlush(customer);
+        //USING RESTTEMPLATE
+//        restTemplate.getForObject(
+//                "http://localhost:8082/api/v1/fraud-check/{customerId}",
+//                FraudCheckResponse.class,
+//                customer.getId()
+//        );
+
+        //USING OPEN FIEGN
+        apiClient.isFraudulent(customer.getId());
     }
 }
