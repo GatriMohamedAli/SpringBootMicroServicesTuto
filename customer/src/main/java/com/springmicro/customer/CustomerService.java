@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public record CustomerService(CustomerRepository customerRepository, ApiClient apiClient) {
+public record CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate) {
     public void register(CustomerRegistrationRequest customerRegistrationRequestRequest) {
         Customer customer=Customer.builder()
                 .name(customerRegistrationRequestRequest.name())
@@ -16,13 +16,13 @@ public record CustomerService(CustomerRepository customerRepository, ApiClient a
         // todo: store in db
         customerRepository.saveAndFlush(customer);
         //USING RESTTEMPLATE
-//        restTemplate.getForObject(
-//                "http://localhost:8082/api/v1/fraud-check/{customerId}",
-//                FraudCheckResponse.class,
-//                customer.getId()
-//        );
+        restTemplate.getForObject(
+                "http://FRAUD/api/v1/fraud-check/{customerId}",
+                FraudCheckResponse.class,
+                customer.getId()
+        );
 
         //USING OPEN FIEGN
-        apiClient.isFraudulent(customer.getId());
+        //apiClient.isFraudulent(customer.getId());
     }
 }
