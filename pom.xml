@@ -12,6 +12,8 @@
     <module>customer</module>
       <module>fraud</module>
     <module>eureka-server</module>
+      <module>notifications</module>
+    <module>apiGateway</module>
   </modules>
 
   <name>SpringMicro</name>
